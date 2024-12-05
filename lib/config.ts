@@ -1,6 +1,7 @@
 import { http, createConfig } from "wagmi";
 import { base, mainnet, optimism } from "wagmi/chains";
-import { metaMask, coinbaseWallet, injected } from "wagmi/connectors";
+import { metaMask, coinbaseWallet } from "wagmi/connectors";
+import { frameConnector } from "./frameConnector";
 
 export const config = createConfig({
   chains: [base, mainnet, optimism],
@@ -12,9 +13,7 @@ export const config = createConfig({
       preference: "all",
     }),
     metaMask(),
-    injected({
-      target: "rainbow"
-    }),
+    frameConnector(),
   ],
   transports: {
     [base.id]: http(),

@@ -21,7 +21,6 @@ export function frameConnector() {
     },
     async connect({ chainId } = {}) {
       const provider = await this.getProvider();
-      
       const accounts = await provider.request({
         method: "eth_requestAccounts",
       });
