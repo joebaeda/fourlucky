@@ -10,7 +10,7 @@ export const config = createConfig({
   transports: {
     [base.id]: http(),
   },
-  connectors: [frameConnector(),],
+  connectors: [frameConnector()],
 });
 
 const queryClient = new QueryClient();
