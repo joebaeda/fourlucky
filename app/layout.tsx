@@ -19,7 +19,7 @@ const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const frame = {
   version: "next",
-  imageUrl: `${appUrl}/opengraph-image`,
+  imageUrl: `${appUrl}/og-image.png`,
   button: {
     title: "Get Your Lucky!",
     action: {
@@ -46,7 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: 'website',
       images: [
         {
-          url: 'https://fourlucky.vercel.app/opengraph-image',
+          url: 'https://fourlucky.vercel.app/og-image.png',
           width: 1200,
           height: 630,
           alt: 'Four Lucky',
@@ -57,7 +57,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: 'Four Lucky | Get your lucky by FOUR Numbers',
       description: 'Four Number that can make your life better just if your lucky',
-      images: ['https://fourlucky.vercel.app/opengraph-image'],
+      images: ['https://fourlucky.vercel.app/og-image.png'],
     },
     icons: {
       icon: '/favicon.ico',

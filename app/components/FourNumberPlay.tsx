@@ -5,6 +5,7 @@ import sdk from "@farcaster/frame-sdk";
 import {
     BaseError,
     useAccount,
+    useChainId,
     useWaitForTransactionReceipt,
     useWriteContract,
 } from "wagmi";
@@ -25,6 +26,7 @@ import NumberSeven from '../number/Seven';
 import NumberEight from '../number/Eight';
 import NumberNine from '../number/Nine';
 import Image from "next/image";
+import { base } from "wagmi/chains";
 
 const FourNumberContract = process.env.NEXT_PUBLIC_FOURLUCKY_CONTRACT;
 
@@ -34,6 +36,7 @@ const FourNumberPlay = () => {
     const [etherAmount, setTokenBetAmount] = useState('');
 
     const { isConnected } = useAccount();
+    const chainId = useChainId();
 
     const parsedEther = etherAmount
         ? parseEther(etherAmount)
@@ -59,6 +62,7 @@ const FourNumberPlay = () => {
     useEffect(() => {
         if (isConfirmed) {
             setTokenBetAmount("")
+            setUserNumbers([]);
         }
     }, [isConfirmed])
 
@@ -87,51 +91,52 @@ const FourNumberPlay = () => {
         <div className="w-full flex flex-col sm:flex-row gap-4">
             {/* Selected Numbers */}
             <div className="basis-1/2 grid grid-cols-2 gap-4 bg-gray-50 rounded-2xl p-4">
-    {Array.from({ length: 4 }).map((_, index) => {
-        const number = userNumbers[index]; // Get the number if it exists
-        return (
-            <div
-                key={index}
-                className="flex justify-center items-center bg-gray-200 rounded-xl"
-            >
-                {number !== undefined ? (
-                    // Render the appropriate number component
-                    number === 0 ? (
-                        <ZeroNumber />
-                    ) : number === 1 ? (
-                        <NumberOne />
-                    ) : number === 2 ? (
-                        <NumberTwo />
-                    ) : number === 3 ? (
-                        <NumberThree />
-                    ) : number === 4 ? (
-                        <NumberFour />
-                    ) : number === 5 ? (
-                        <NumberFive />
-                    ) : number === 6 ? (
-                        <NumberSix />
-                    ) : number === 7 ? (
-                        <NumberSeven />
-                    ) : number === 8 ? (
-                        <NumberEight />
-                    ) : (
-                        <NumberNine />
-                    )
-                ) : (
-                    // Render a placeholder for unselected numbers
-                    <Image
-                        src="/placeholder.webp"
-                        width={220}
-                        height={200}
-                        priority
-                        alt="Placeholder"
-                        className="object-contain rounded-xl"
-                    />
-                )}
+                {Array.from({ length: 4 }).map((_, index) => {
+                    const number = userNumbers[index]; // Get the number if it exists
+                    return (
+                        <div
+                            key={index}
+                            className="flex justify-center items-center bg-gray-200 rounded-xl"
+                        >
+                            {number !== undefined ? (
+                                // Render the appropriate number component
+                                number === 0 ? (
+                                    <ZeroNumber />
+                                ) : number === 1 ? (
+                                    <NumberOne />
+                                ) : number === 2 ? (
+                                    <NumberTwo />
+                                ) : number === 3 ? (
+                                    <NumberThree />
+                                ) : number === 4 ? (
+                                    <NumberFour />
+                                ) : number === 5 ? (
+                                    <NumberFive />
+                                ) : number === 6 ? (
+                                    <NumberSix />
+                                ) : number === 7 ? (
+                                    <NumberSeven />
+                                ) : number === 8 ? (
+                                    <NumberEight />
+                                ) : (
+                                    <NumberNine />
+                                )
+                            ) : (
+                                // Render a placeholder for unselected numbers
+                                <Image
+                                    src="/placeholder.webp"
+                                    width={220}
+                                    height={200}
+                                    alt="Placeholder"
+                                    placeholder="blur"
+                                    blurDataURL={'/placeholder.webp'}
+                                    className="w-auto h-auto object-contain rounded-xl"
+                                />
+                            )}
+                        </div>
+                    );
+                })}
             </div>
-        );
-    })}
-</div>
 
 
 
@@ -166,7 +171,7 @@ const FourNumberPlay = () => {
 
                 {/* Place Bet button */}
                 <Button
-                    disabled={!isConnected || isPending}
+                    disabled={!isConnected || chainId !== base.id || isPending || !etherAmount || !userNumbers}
                     onClick={() =>
                         writeContract({
                             abi,
@@ -225,7 +230,7 @@ const FourNumberPlay = () => {
 
 
             </div>
-            
+
             {/* Decorative Effects */}
             <div className="absolute inset-0 opacity-20 pointer-events-none">
                 <div className="absolute top-0 left-0 w-40 h-40 bg-yellow-300 rounded-full blur-xl" />
