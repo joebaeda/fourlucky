@@ -174,7 +174,7 @@ export const abi = [
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "currentTimestamp",
+				"name": "endTime",
 				"type": "uint256"
 			},
 			{

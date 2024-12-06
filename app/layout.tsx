@@ -1,25 +1,13 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
 import Provider from "./components/Provider";
 import Navbar from "./components/Navbar";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 const frame = {
   version: "next",
-  imageUrl: `${appUrl}/og-image.png`,
+  imageUrl: `${appUrl}/og-image.jpg`,
   button: {
     title: "Get Your Lucky!",
     action: {
@@ -27,7 +15,7 @@ const frame = {
       name: "Four Lucky",
       url: appUrl,
       splashImageUrl: `${appUrl}/splash.png`,
-      splashBackgroundColor: "#f7f7f7",
+      splashBackgroundColor: "#1f1f1f",
     },
   },
 };
@@ -46,7 +34,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: 'website',
       images: [
         {
-          url: 'https://fourlucky.vercel.app/og-image.png',
+          url: 'https://fourlucky.vercel.app/og-image.jpg',
           width: 1200,
           height: 630,
           alt: 'Four Lucky',
@@ -57,7 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
       card: 'summary_large_image',
       title: 'Four Lucky | Get your lucky by FOUR Numbers',
       description: 'Four Number that can make your life better just if your lucky',
-      images: ['https://fourlucky.vercel.app/og-image.png'],
+      images: ['https://fourlucky.vercel.app/og-image.jpg'],
     },
     icons: {
       icon: '/favicon.ico',
@@ -75,12 +63,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100`}
-      >
+      <body>
         <Provider>
           <Navbar />
-          <main>{children}</main>
+          <main className="bg-[#1f1f1f] rounded-t-2xl">{children}</main>
         </Provider>
       </body>
     </html>

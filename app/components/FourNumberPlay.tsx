@@ -13,7 +13,6 @@ import { parseEther } from "viem";
 
 import { Button } from "./Button";
 import { abi } from "@/lib/contract";
-import Loading from "./Loading";
 
 import ZeroNumber from '../number/Zero';
 import NumberTwo from '../number/Two';
@@ -25,10 +24,9 @@ import NumberSix from '../number/Six';
 import NumberSeven from '../number/Seven';
 import NumberEight from '../number/Eight';
 import NumberNine from '../number/Nine';
-import Image from "next/image";
 import { base } from "wagmi/chains";
 
-const FourNumberContract = process.env.NEXT_PUBLIC_FOURLUCKY_CONTRACT;
+const FourNumberContract = process.env.NEXT_PUBLIC_FOURLUCKY_CONTRACT as `0x${string}`;
 
 const FourNumberPlay = () => {
     const [isSDKLoaded, setIsSDKLoaded] = useState(false);
@@ -84,19 +82,19 @@ const FourNumberPlay = () => {
     };
 
     if (!isSDKLoaded) {
-        return <Loading />;
+        return <></>;
     }
 
     return (
         <div className="w-full flex flex-col sm:flex-row gap-4">
             {/* Selected Numbers */}
-            <div className="basis-1/2 grid grid-cols-2 gap-4 bg-gray-50 rounded-2xl p-4">
+            <div className="basis-1/2 grid grid-cols-2 gap-4 bg-[#282828] rounded-2xl p-4">
                 {Array.from({ length: 4 }).map((_, index) => {
                     const number = userNumbers[index]; // Get the number if it exists
                     return (
                         <div
                             key={index}
-                            className="flex justify-center items-center bg-gray-200 rounded-xl"
+                            className="flex justify-center items-center rounded-xl"
                         >
                             {number !== undefined ? (
                                 // Render the appropriate number component
@@ -123,15 +121,7 @@ const FourNumberPlay = () => {
                                 )
                             ) : (
                                 // Render a placeholder for unselected numbers
-                                <Image
-                                    src="/placeholder.webp"
-                                    width={220}
-                                    height={200}
-                                    alt="Placeholder"
-                                    placeholder="blur"
-                                    blurDataURL={'/placeholder.webp'}
-                                    className="w-auto h-auto object-contain rounded-xl"
-                                />
+                                <ZeroNumber />
                             )}
                         </div>
                     );
@@ -141,16 +131,16 @@ const FourNumberPlay = () => {
 
 
             {/* Number selection */}
-            <div className="basis-1/2 flex flex-col">
-                <div className="grid grid-cols-5 gap-4 bg-gray-50 p-4 rounded-2xl">
+            <div className="basis-1/2 flex flex-col p-4 bg-[#282828] rounded-2xl">
+                <div className="grid grid-cols-5 gap-4 mb-4">
                     {availableNumbers.map((number) => (
                         <div
                             key={number}
-                            className={`w-12 h-12 flex justify-center items-center m-auto rounded-full cursor-pointer ${userNumbers.includes(number) ? 'bg-orange-400' : 'bg-gray-200'
+                            className={`w-12 h-12 flex justify-center items-center m-auto rounded-full cursor-pointer ${userNumbers.includes(number) ? 'bg-orange-600' : 'bg-[#1f1f1f]'
                                 }`}
                             onClick={() => handleNumberSelect(number)}
                         >
-                            <span className={`text-2xl font-bold ${userNumbers.includes(number) ? 'text-white' : 'text-black'}`}>
+                            <span className={`text-2xl font-bold ${userNumbers.includes(number) ? 'text-white' : 'text-orange-600'}`}>
                                 {number}
                             </span>
                         </div>
@@ -162,7 +152,7 @@ const FourNumberPlay = () => {
                     type="text"
                     id="etherAmount"
                     name="etherAmount"
-                    className="border placeholder:opacity-25 p-3 w-full mt-4 rounded-2xl bg-gray-50 text-gray-700 focus:outline-none"
+                    className="border-none placeholder:opacity-25 p-3 w-full bg-[#1f1f1f] rounded-2xl text-gray-500 focus:outline-none"
                     placeholder="0.0004"
                     value={etherAmount}
                     disabled={userNumbers.length !== maxNumbers}
@@ -171,11 +161,13 @@ const FourNumberPlay = () => {
 
                 {/* Place Bet button */}
                 <Button
+                    className="mt-5"
                     disabled={!isConnected || chainId !== base.id || isPending || !etherAmount || !userNumbers}
                     onClick={() =>
                         writeContract({
                             abi,
-                            address: FourNumberContract as '0x{string}',
+                            chainId: base.id, //8453
+                            address: FourNumberContract as `0x${string}`,
                             functionName: 'placeBet',
                             value: parsedEther,
                             args: [userNumbers as [number, number, number, number]],
@@ -191,7 +183,7 @@ const FourNumberPlay = () => {
 
                 {isConfirmed && (
                     <>
-                        <p className="my-2 text-xl text-green-600 font-extrabold">
+                        <p className="my-5 text-md text-green-600 font-extrabold">
                             🎉 Transaction Confirmed!
                         </p>
                         <Button
@@ -205,7 +197,7 @@ const FourNumberPlay = () => {
                     <div>Error: {(error as BaseError).shortMessage || error.message}</div>
                 )}
 
-                <div className="w-full mt-10 rounded-2xl bg-gray-50 p-4 text-gray-500">
+                <div className="w-full mt-10 rounded-2xl p-4 text-gray-500">
                     <ul className="space-y-2">
                         <li className="flex items-start">
                             <span className="mr-2 text-green-500">

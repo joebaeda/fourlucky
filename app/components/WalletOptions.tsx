@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Connector, useConnect } from "wagmi";
-import { Button } from "./Button";
+import Image from "next/image";
 
 export function WalletOptions({ onConnect }: { onConnect: () => void }) {
     const { connectors, connect } = useConnect();
@@ -40,12 +40,15 @@ function WalletOption({
     }, [connector]);
 
     return (
-        <Button
-            disabled={!ready}
-            onClick={onClick}
-            className={`w-full ${ready ? "bg-blue-500" : "bg-gray-300"} hover:bg-purple-600`}
-        >
-            {connector.name}
-        </Button>
+        <div className="flex p-2 rounded-2xl justify-between gap-2 items-center bg-[#282828]">
+            <Image className="rounded-2xl w-10 h-10" src={connector.icon || "/splash.png"} width={60} priority height={60} alt={connector.name} />
+            <button
+                className="text-xl font-extrabold text-center px-4"
+                disabled={!ready}
+                onClick={onClick}
+            >
+                {connector.name}
+            </button>
+        </div>
     );
 }
