@@ -3,7 +3,7 @@ import "./globals.css";
 import Provider from "./components/Provider";
 import Navbar from "./components/Navbar";
 
-const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
+const appUrl = "https://fourlucky.vercel.app";
 
 const frame = {
   version: "next",

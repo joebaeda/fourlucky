@@ -6,7 +6,7 @@ import { useReadContract, useReadContracts } from "wagmi";
 import { useState, useEffect, useMemo } from "react";
 import { truncateAddress } from "@/lib/truncateAddress";
 
-const FourNumberContract = process.env.NEXT_PUBLIC_FOURLUCKY_CONTRACT as `0x${string}`;
+const FourNumberContract = "0xFf54b30EC87a0e82814f214EEeDd258867374b4C" as `0x${string}`;
 
 const UserStatsData = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

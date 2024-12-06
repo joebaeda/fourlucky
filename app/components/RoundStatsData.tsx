@@ -5,7 +5,7 @@ import { useReadContract } from "wagmi";
 import { formatEther } from "viem";
 import CountdownTimer from "./CountdownTimer";
 
-const FourNumberContract = process.env.NEXT_PUBLIC_FOURLUCKY_CONTRACT as `0x${string}`;
+const FourNumberContract = "0xFf54b30EC87a0e82814f214EEeDd258867374b4C" as `0x${string}`;
 
 const RoundStatsData = () => {
     // Fetch the current round number

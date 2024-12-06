@@ -26,7 +26,7 @@ import NumberEight from '../number/Eight';
 import NumberNine from '../number/Nine';
 import { base } from "wagmi/chains";
 
-const FourNumberContract = process.env.NEXT_PUBLIC_FOURLUCKY_CONTRACT as `0x${string}`;
+const FourNumberContract = "0xFf54b30EC87a0e82814f214EEeDd258867374b4C" as `0x${string}`;
 
 const FourNumberPlay = () => {
     const [isSDKLoaded, setIsSDKLoaded] = useState(false);
