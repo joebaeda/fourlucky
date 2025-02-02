@@ -6,7 +6,7 @@ import { useReadContract, useReadContracts } from "wagmi";
 import { useState, useEffect, useMemo } from "react";
 import { truncateAddress } from "@/lib/truncateAddress";
 
-const FourNumberContract = "0xFf54b30EC87a0e82814f214EEeDd258867374b4C" as `0x${string}`;
+const FourNumberContract = "0xe25C578b2F087381B713F482Bf3AA954cff2125e" as `0x${string}`;
 
 const UserStatsData = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,9 +55,8 @@ const UserStatsData = () => {
         return {
           address: players[index],
           betCount: stats[0].toString(),
-          totalSpent: stats[1],
-          wins: Number(stats[2]),
-          roundsCompleted: stats[3].toString(),
+          wins: Number(stats[1]),
+          prizesEarned: stats[2].toString(),
         };
       });
 
@@ -82,8 +81,7 @@ const UserStatsData = () => {
               <th className="p-2">Rank</th>
               <th className="p-2">Address</th>
               <th className="p-2">Wins</th>
-              <th className="p-2">Total Spent (ETH)</th>
-              <th className="p-2">Rounds Played</th>
+              <th className="p-2">Prizes Earned</th>
             </tr>
           </thead>
           <tbody>
@@ -100,9 +98,8 @@ const UserStatsData = () => {
                 </td>
                 <td className="p-2 text-gray-700 border border-gray-300">{player.wins}</td>
                 <td className="p-2 text-gray-700 border border-gray-300">
-                  {formatEther(player.totalSpent)}
+                  {parseFloat(formatEther(player.prizesEarned)).toFixed(0)} $LUCKY
                 </td>
-                <td className="p-2 text-gray-700 border border-gray-300">{player.roundsCompleted}</td>
               </tr>
             ))}
           </tbody>

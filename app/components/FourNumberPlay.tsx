@@ -6,10 +6,10 @@ import {
     BaseError,
     useAccount,
     useChainId,
+    useReadContract,
     useWaitForTransactionReceipt,
     useWriteContract,
 } from "wagmi";
-import { parseEther } from "viem";
 
 import { Button } from "./Button";
 import { abi } from "@/lib/contract";
@@ -26,19 +26,14 @@ import NumberEight from '../number/Eight';
 import NumberNine from '../number/Nine';
 import { base } from "wagmi/chains";
 
-const FourNumberContract = "0xFf54b30EC87a0e82814f214EEeDd258867374b4C" as `0x${string}`;
+const FourNumberContract = "0xe25C578b2F087381B713F482Bf3AA954cff2125e" as `0x${string}`;
 
 const FourNumberPlay = () => {
     const [isSDKLoaded, setIsSDKLoaded] = useState(false);
     const [userNumbers, setUserNumbers] = useState<number[]>([]);
-    const [etherAmount, setTokenBetAmount] = useState('');
 
     const { isConnected } = useAccount();
     const chainId = useChainId();
-
-    const parsedEther = etherAmount
-        ? parseEther(etherAmount)
-        : undefined;
 
     const { data: hash, error, isPending, writeContract } = useWriteContract()
 
@@ -59,7 +54,6 @@ const FourNumberPlay = () => {
 
     useEffect(() => {
         if (isConfirmed) {
-            setTokenBetAmount("")
             setUserNumbers([]);
         }
     }, [isConfirmed])
@@ -80,6 +74,25 @@ const FourNumberPlay = () => {
             setUserNumbers([...userNumbers, number]);
         }
     };
+
+    // Fetch the current round number
+    const { data: currentRoundData } = useReadContract({
+        abi,
+        address: FourNumberContract as `0x${string}`,
+        functionName: "currentRound",
+    });
+
+    const currentRound = currentRoundData ? Number(currentRoundData) : null;
+
+    // Fetch the current round information
+    const { data } = useReadContract({
+        abi,
+        address: FourNumberContract as `0x${string}`,
+        functionName: "getRoundData",
+        args: [BigInt(currentRound || 1)], // Convert round number to BigInt for the contract
+    });
+
+    const endTime = data?.[1] ? Number(data[1]) * 1000 : null; // Convert seconds to milliseconds
 
     if (!isSDKLoaded) {
         return <></>;
@@ -147,39 +160,47 @@ const FourNumberPlay = () => {
                     ))}
                 </div>
 
-                {/* Ether amount input */}
-                <input
-                    type="text"
-                    id="etherAmount"
-                    name="etherAmount"
-                    className="border-none placeholder:opacity-25 p-3 w-full bg-[#1f1f1f] rounded-2xl text-gray-500 focus:outline-none"
-                    placeholder="0.0004"
-                    value={etherAmount}
-                    disabled={userNumbers.length !== maxNumbers}
-                    onChange={(e) => setTokenBetAmount(e.target.value)}
-                />
-
                 {/* Place Bet button */}
-                <Button
-                    className="mt-5"
-                    disabled={!isConnected || chainId !== base.id || isPending || !etherAmount || !userNumbers}
-                    onClick={() =>
-                        writeContract({
-                            abi,
-                            chainId: base.id, //8453
-                            address: FourNumberContract as `0x${string}`,
-                            functionName: 'placeBet',
-                            value: parsedEther,
-                            args: [userNumbers as [number, number, number, number]],
-                        })
-                    }
-                >
-                    {isPending
-                        ? "Confirming..."
-                        : isConfirming
-                            ? "Waiting for confirmation..."
-                            : "Lock and Bet"}
-                </Button>
+                {endTime && endTime > Date.now() ? (
+                    <Button
+                        className="mt-5"
+                        disabled={!isConnected || chainId !== base.id || isPending || !userNumbers}
+                        onClick={() =>
+                            writeContract({
+                                abi,
+                                chainId: base.id, //8453
+                                address: FourNumberContract as `0x${string}`,
+                                functionName: 'placeBet',
+                                args: [userNumbers as [number, number, number, number]],
+                            })
+                        }
+                    >
+                        {isPending
+                            ? "Confirming..."
+                            : isConfirming
+                                ? "Waiting for confirmation..."
+                                : "Lock and Bet"}
+                    </Button>
+                ) : (
+                    <Button
+                        className="mt-5"
+                        disabled={!isConnected || chainId !== base.id || isPending || !userNumbers}
+                        onClick={() =>
+                            writeContract({
+                                abi,
+                                chainId: base.id, //8453
+                                address: FourNumberContract as `0x${string}`,
+                                functionName: 'draw',
+                            })
+                        }
+                    >
+                        {isPending
+                            ? "Confirming..."
+                            : isConfirming
+                                ? "Waiting for confirmation..."
+                                : "Draw"}
+                    </Button>
+                )}
 
                 {isConfirmed && (
                     <>
@@ -209,7 +230,19 @@ const FourNumberPlay = () => {
                             <span className="mr-2 text-green-500">
                                 &#10003;
                             </span>
-                            Place your bet using minimum 0.0004 &#40;ETH&#41; to play this game
+                            Each round there will only be one winner and they will be entitled to 60% of the total prize
+                        </li>
+                        <li className="flex items-start">
+                            <span className="mr-2 text-green-500">
+                                &#10003;
+                            </span>
+                            This game is Free but you have to hold 500K $LUCKY to be able to play and get prizes
+                        </li>
+                        <li className="flex items-start">
+                            <span className="mr-2 text-green-500">
+                                &#10003;
+                            </span>
+                            Prizes Pool will continue to increase and will return to 100K after finding a winner
                         </li>
                         <li className="flex items-start">
                             <span className="mr-2 text-green-500">

@@ -1,38 +1,39 @@
 export const abi = [
 	{
+		"inputs": [],
+		"name": "draw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "_minimumBet",
-				"type": "uint256"
+				"internalType": "uint8[4]",
+				"name": "userNumbers",
+				"type": "uint8[4]"
+			}
+		],
+		"name": "placeBet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_luckyToken",
+				"type": "address"
 			},
 			{
-				"internalType": "uint256",
-				"name": "_creatorFeePercentage",
-				"type": "uint256"
+				"internalType": "address",
+				"name": "_protocolFeeRecipient",
+				"type": "address"
 			}
 		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "player",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "betAmount",
-				"type": "uint256"
-			}
-		],
-		"name": "BetPlaced",
-		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -52,13 +53,13 @@ export const abi = [
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "prizePool",
+				"name": "totalPrizePool",
 				"type": "uint256"
 			},
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "creatorFee",
+				"name": "protocolFee",
 				"type": "uint256"
 			}
 		],
@@ -66,49 +67,21 @@ export const abi = [
 		"type": "event"
 	},
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
 				"internalType": "address",
-				"name": "sender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			}
-		],
-		"name": "ReceivedEther",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
+				"name": "token",
 				"type": "address"
 			}
 		],
-		"stateMutability": "view",
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "creatorFeePercentage",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
+		"stateMutability": "payable",
+		"type": "receive"
 	},
 	{
 		"inputs": [],
@@ -121,26 +94,6 @@ export const abi = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "roundNumber",
-				"type": "uint256"
-			}
-		],
-		"name": "distributePrizes",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "draw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -170,21 +123,31 @@ export const abi = [
 				"type": "uint256"
 			}
 		],
-		"name": "getRoundInfo",
+		"name": "getRoundData",
 		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "startTime",
+				"type": "uint256"
+			},
 			{
 				"internalType": "uint256",
 				"name": "endTime",
 				"type": "uint256"
 			},
 			{
-				"internalType": "uint256",
-				"name": "totalPlayers",
-				"type": "uint256"
+				"internalType": "bool",
+				"name": "isDrawn",
+				"type": "bool"
+			},
+			{
+				"internalType": "uint8[4]",
+				"name": "winningNumbers",
+				"type": "uint8[4]"
 			},
 			{
 				"internalType": "uint256",
-				"name": "totalBetAmount",
+				"name": "playerCount",
 				"type": "uint256"
 			}
 		],
@@ -208,17 +171,41 @@ export const abi = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "totalSpent",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
 				"name": "wins",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "roundsCompleted",
+				"name": "prizesEarned",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "roundNumber",
+				"type": "uint256"
+			}
+		],
+		"name": "getWinnerData",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "winner",
+				"type": "address"
+			},
+			{
+				"internalType": "uint8[4]",
+				"name": "winningNumbers",
+				"type": "uint8[4]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "prizeAmount",
 				"type": "uint256"
 			}
 		],
@@ -227,7 +214,7 @@ export const abi = [
 	},
 	{
 		"inputs": [],
-		"name": "minimumBet",
+		"name": "INITIAL_PRIZE",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -239,33 +226,81 @@ export const abi = [
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "luckyToken",
+		"outputs": [
 			{
-				"internalType": "uint8[4]",
-				"name": "userNumbers",
-				"type": "uint8[4]"
+				"internalType": "contract IERC20",
+				"name": "",
+				"type": "address"
 			}
 		],
-		"name": "placeBet",
-		"outputs": [],
-		"stateMutability": "payable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "MIN_HOLDING",
+		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "amount",
+				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "withdrawAdmin",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"stateMutability": "payable",
-		"type": "receive"
+		"inputs": [],
+		"name": "PRIZE_INCREMENT",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "prizePool",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "PROTOCOL_FEE_PERCENT",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "protocolFeeRecipient",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
 	}
 ] as const

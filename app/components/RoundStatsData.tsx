@@ -2,12 +2,21 @@
 
 import { abi } from "@/lib/contract";
 import { useReadContract } from "wagmi";
-import { formatEther } from "viem";
 import CountdownTimer from "./CountdownTimer";
+import { formatEther } from "viem";
 
-const FourNumberContract = "0xFf54b30EC87a0e82814f214EEeDd258867374b4C" as `0x${string}`;
+const FourNumberContract = "0xe25C578b2F087381B713F482Bf3AA954cff2125e" as `0x${string}`;
 
 const RoundStatsData = () => {
+    // Fetch the prize pool
+    const { data: prizePoolData } = useReadContract({
+        abi,
+        address: FourNumberContract as `0x${string}`,
+        functionName: "prizePool",
+    });
+
+    const prizePool = prizePoolData ? formatEther(prizePoolData) : null;
+
     // Fetch the current round number
     const { data: currentRoundData } = useReadContract({
         abi,
@@ -21,13 +30,12 @@ const RoundStatsData = () => {
     const { data } = useReadContract({
         abi,
         address: FourNumberContract as `0x${string}`,
-        functionName: "getRoundInfo",
+        functionName: "getRoundData",
         args: [BigInt(currentRound || 1)], // Convert round number to BigInt for the contract
     });
 
-    const endTime = data?.[0] ? Number(data[0]) * 1000 : null; // Convert seconds to milliseconds
-    const totalPlayers = data?.[1] ? data[1].toString() : "0";
-    const totalBetAmount = data?.[2] ? formatEther(data[2]) : "0";
+    const endTime = data?.[1] ? Number(data[1]) * 1000 : null; // Convert seconds to milliseconds
+    const totalPlayers = data?.[4] ? data[4].toString() : "0";
 
 
     return (
@@ -46,8 +54,8 @@ const RoundStatsData = () => {
                     <p className="text-2xl font-bold text-white">{totalPlayers}</p>
                 </div>
                 <div className="bg-gradient-to-r from-red-200 to-yellow-200 p-4 rounded-2xl shadow-md text-center">
-                    <h2 className="text-lg font-semibold text-gray-700">Total Bet Amount</h2>
-                    <p className="text-2xl font-bold text-white">{totalBetAmount} ETH</p>
+                    <h2 className="text-lg font-semibold text-gray-700">Prize Pool</h2>
+                    <p className="text-2xl font-bold text-white">{parseFloat(prizePool as string).toFixed(0)} $LUCKY</p>
                 </div>
             </div>
 
