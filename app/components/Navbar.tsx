@@ -71,8 +71,8 @@ const Navbar = () => {
                                 ✕
                             </button>
                         </div>
-                            <p className="text-xl text-gray-500 mb-3 font-semibold">Network: {chain?.name}</p>
-                            <p className="text-xl text-gray-500 mb-4 font-semibold">Balance: {parseFloat(formatEther(balance.data?.value as bigint)).toFixed(3)} {balance.data?.symbol}</p>
+                        <p className="text-xl text-gray-500 mb-3 font-semibold">Network: {chain?.name}</p>
+                        <p className="text-xl text-gray-500 mb-4 font-semibold">Balance: {parseFloat(formatEther(balance.data?.value as bigint)).toFixed(3)} {balance.data?.symbol}</p>
                         <Button onClick={() => disconnect()}>
                             Disconnect
                         </Button>

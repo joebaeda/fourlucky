@@ -4,6 +4,7 @@ import UserStatsData from "./components/UserStatsData";
 
 
 export default function Home() {
+
   return (
     <div className="p-4">
       <FourNumberPlay />
