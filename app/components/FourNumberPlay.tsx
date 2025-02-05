@@ -169,7 +169,7 @@ const FourNumberPlay = () => {
                 ) : (
                     <Button
                         className="mt-5"
-                        disabled={!isConnected || chainId !== base.id || isPending || !userNumbers}
+                        disabled={!isConnected || chainId !== base.id || isPending}
                         onClick={() =>
                             writeContract({
                                 abi,
